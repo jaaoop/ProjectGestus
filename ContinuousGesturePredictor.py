@@ -11,6 +11,18 @@ import imutils
 # global variables
 bg = None
 
+# variable used in drection function
+fgbg = cv2.createBackgroundSubtractorMOG2(300, 400, True)
+
+def direction(ret, frame, fgbg):
+    resizedFrame = cv2.resize(frame, (0, 0), fx=0.50, fy=0.50) 
+    fgmask = fgbg.apply(resizedFrame)
+    count = np.count_nonzero(fgmask)
+    cv2.imshow('Frame', resizedFrame)
+    cv2.imshow('Mask', fgmask)
+    return count
+
+
 def resizeImage(imageName):
     basewidth = 100
     img = Image.open(imageName)
@@ -71,6 +83,12 @@ def main():
     while(True):
         # get the current frame
         (grabbed, frame) = camera.read()
+
+        #get the frame for direction function
+        ret, frame = camera.read() 
+
+        # counts the white pixels of the areas next to the green box
+        direction(ret,frame,fgbg)
 
         # resize the frame
         frame = imutils.resize(frame, width = 700)
