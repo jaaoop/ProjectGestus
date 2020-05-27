@@ -14,14 +14,46 @@ bg = None
 # variable used in drection function
 fgbg = cv2.createBackgroundSubtractorMOG2(300, 400, True)
 
-def direction(ret, frame, fgbg):
-    resizedFrame = cv2.resize(frame, (0, 0), fx=0.50, fy=0.50) 
-    fgmask = fgbg.apply(resizedFrame)
-    count = np.count_nonzero(fgmask)
-    cv2.imshow('Frame', resizedFrame)
-    cv2.imshow('Mask', fgmask)
-    return count
+def direction(ret, frame, clone, fgbg):
+    #crop a specific part of the video
+    left= frame[10:225,590:640]
+    right= frame[10:225, 300:350]
+    left=cv2.resize(left, (0, 0), fx=0.50, fy=0.50)
+    right=cv2.resize(right, (0, 0), fx=0.50, fy=0.50)
 
+    #aplly bacground subtractor on the ceoped frames
+    fgmaskRight = fgbg.apply(right)
+    fgmaskLeft = fgbg.apply(left)
+
+    #count the number of white pixels to determinate the moviment
+    countRight = np.count_nonzero(fgmaskRight)
+    countLeft = np.count_nonzero(fgmaskLeft)
+
+    if countRight>0:
+        print(countRight)
+    if countLeft> 0:
+        print(countLeft)
+
+    #draw a square on the clone frame 
+    cv2.rectangle(clone, (640, 10), (590, 225), (255,0,0), 2)
+    cv2.rectangle(clone, (350, 10), (300, 225), (255,0,0), 2)
+
+    #show the croped and with  background subt
+    cv2.imshow('Left', left)
+    cv2.imshow('Right', right)
+    cv2.imshow('Mask Right', fgmaskRight)
+    cv2.imshow('Mask Left', fgmaskLeft)
+    
+def dif(ret,frame, num_frames, camera):
+    if num_frames == 0:
+        imagA=camera.read()
+        imagA=cv2.cvtColor(imagA, cv2.COLOR_BGR2GRAY)
+    else:
+        imagB=camera.read()
+        imagB = cv2.cvtColor(imagB, cv2.COLOR_BGR2GRAY)
+        (score, diff) = ssim(imagB, imagB, full=True)
+        print("Image similarity:", score)
+        cv2.imshow('diff', diff)
 
 def resizeImage(imageName):
     basewidth = 100
@@ -87,9 +119,6 @@ def main():
         #get the frame for direction function
         ret, frame = camera.read() 
 
-        # counts the white pixels of the areas next to the green box
-        direction(ret,frame,fgbg)
-
         # resize the frame
         frame = imutils.resize(frame, width = 700)
 
@@ -98,6 +127,10 @@ def main():
 
         # clone the frame
         clone = frame.copy()
+
+        # counts the white pixels of the areas next to the green box
+        direction(ret,frame,clone,fgbg)
+        #dif(ret,frame, num_frames, camera)
 
         # get the height and width of the frame
         (height, width) = frame.shape[:2]
