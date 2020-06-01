@@ -11,10 +11,10 @@ import imutils
 # global variables
 bg = None
 
-# variable used in drection function
-fgbg = cv2.createBackgroundSubtractorMOG2(300, 400, True)
+# efect used in drection function
+efect= cv2.createBackgroundSubtractorMOG2(50, 50, True)
 
-def direction(ret, frame, clone, fgbg):
+def direction(ret, frame, clone, efect):
     #crop a specific part of the video
     left= frame[10:225,590:640]
     right= frame[10:225, 300:350]
@@ -22,17 +22,17 @@ def direction(ret, frame, clone, fgbg):
     right=cv2.resize(right, (0, 0), fx=0.50, fy=0.50)
 
     #aplly bacground subtractor on the ceoped frames
-    fgmaskRight = fgbg.apply(right)
-    fgmaskLeft = fgbg.apply(left)
+    maskRight = efect.apply(right)
+    maskLeft = efect.apply(left)
 
     #count the number of white pixels to determinate the moviment
-    countRight = np.count_nonzero(fgmaskRight)
-    countLeft = np.count_nonzero(fgmaskLeft)
+    countRight = np.count_nonzero(maskRight)
+    countLeft = np.count_nonzero(maskLeft)
 
-    if countRight>0:
-        print(countRight)
-    if countLeft> 0:
-        print(countLeft)
+    if countRight>100:
+        print("Right: " + countRight)
+    if countLeft> 100:
+        print("Left: " + countLeft)
 
     #draw a square on the clone frame 
     cv2.rectangle(clone, (640, 10), (590, 225), (255,0,0), 2)
@@ -41,19 +41,8 @@ def direction(ret, frame, clone, fgbg):
     #show the croped and with  background subt
     cv2.imshow('Left', left)
     cv2.imshow('Right', right)
-    cv2.imshow('Mask Right', fgmaskRight)
-    cv2.imshow('Mask Left', fgmaskLeft)
-    
-def dif(ret,frame, num_frames, camera):
-    if num_frames == 0:
-        imagA=camera.read()
-        imagA=cv2.cvtColor(imagA, cv2.COLOR_BGR2GRAY)
-    else:
-        imagB=camera.read()
-        imagB = cv2.cvtColor(imagB, cv2.COLOR_BGR2GRAY)
-        (score, diff) = ssim(imagB, imagB, full=True)
-        print("Image similarity:", score)
-        cv2.imshow('diff', diff)
+    cv2.imshow('Mask Right', maskRight)
+    cv2.imshow('Mask Left', maskLeft)
 
 def resizeImage(imageName):
     basewidth = 100
@@ -129,8 +118,7 @@ def main():
         clone = frame.copy()
 
         # counts the white pixels of the areas next to the green box
-        direction(ret,frame,clone,fgbg)
-        #dif(ret,frame, num_frames, camera)
+        direction(ret,frame,clone,efect)
 
         # get the height and width of the frame
         (height, width) = frame.shape[:2]
