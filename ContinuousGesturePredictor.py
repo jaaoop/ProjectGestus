@@ -8,11 +8,19 @@ from PIL import Image
 import cv2
 import imutils
 from pynput.keyboard import Key, Controller
+import time
 
 keyboard = Controller()
 
 # global variables
 bg = None
+
+def samePredictions(new_predictions):
+    for i in range(len(new_predictions)-1):
+        if(new_predictions[0] != new_predictions[i+1]):
+            return False
+    return True
+
 
 def resizeImage(imageName):
     basewidth = 100
@@ -57,6 +65,11 @@ def segment(image, threshold=25):
         return (thresholded, segmented)
 
 def main():
+    first_pass = True
+    past_predictions = []
+    new_predictions = []
+    predictions_count = 0
+    totalOfPredictions = 4
     # initialize weight for running average
     aWeight = 0.5
 
@@ -109,11 +122,31 @@ def main():
                 (thresholded, segmented) = hand
 
                 # draw the segmented region and display the frame
-                cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
+                # cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
                 if start_recording:
                     cv2.imwrite('Temp.png', thresholded)
                     resizeImage('Temp.png')
                     predictedClass, confidence = getPredictedClass()
+                    if first_pass:
+                        past_predictions.append(predictedClass)
+                        predictions_count+=1
+                        if predictions_count == totalOfPredictions:
+                            predictions_count = 0
+                            first_pass = False
+                    else:
+                        new_predictions.append(predictedClass)
+                        predictions_count+=1
+                        if predictions_count == totalOfPredictions:
+                            if samePredictions(new_predictions):
+                                predictedClass = new_predictions[-1]
+                                past_predictions = new_predictions
+                            else:
+                                predictedClass = past_predictions[-1]
+                            print("{} {} {}".format(past_predictions, new_predictions, samePredictions(new_predictions)))
+                            new_predictions = []
+                            predictions_count = 0
+                        else:
+                            predictedClass = past_predictions[-1]
                     showStatistics(predictedClass, confidence)
                 cv2.imshow("Thesholded", thresholded)
 
@@ -142,7 +175,6 @@ def getPredictedClass():
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray_image = gray_image.reshape(1, 89, 100, 1)
     prediction = model.predict([gray_image])
-    print(prediction)
     return np.argmax(prediction), (np.amax(prediction) / (prediction[0][0] + prediction[0][1] + prediction[0][2]+ prediction[0][3]))
 
 def showStatistics(predictedClass, confidence):
@@ -153,20 +185,28 @@ def showStatistics(predictedClass, confidence):
     if predictedClass == 0:
         className = "Fist"
         # keyboard.release('w')
-        # keyboard.release('d')
-        # keyboard.press('a')
+        # keyboard.release('s')
+        # keyboard.release('a')
+        # keyboard.press('d')
     elif predictedClass == 1:
         className = "Ok"
         # keyboard.release('a')
+        # keyboard.release('w')
         # keyboard.release('d')
-        # keyboard.press('w')
+        # keyboard.press('s')
     elif predictedClass == 2:
         className = "Palm"
         # keyboard.release('a')
-        # keyboard.release('w')
-        # keyboard.press('d')
+        # keyboard.release('s')
+        # keyboard.release('d')
+        # keyboard.press('w')
     elif predictedClass == 3:
         className = "Swing"
+        # keyboard.release('s')
+        # keyboard.release('w')
+        # keyboard.release('d')
+        # keyboard.press('a')
+
 
     cv2.putText(textImage,"Pedicted Class : " + className, 
     (30, 30), 
