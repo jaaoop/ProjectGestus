@@ -30,9 +30,9 @@ def direction(ret, frame, clone, efect):
     countLeft = np.count_nonzero(maskLeft)
 
     if countRight>100:
-        print("Right: " + countRight)
+        print("Right: " + str(countRight))
     if countLeft> 100:
-        print("Left: " + countLeft)
+        print("Left: " + str(countLeft))
 
     #draw a square on the clone frame 
     cv2.rectangle(clone, (640, 10), (590, 225), (255,0,0), 2)
