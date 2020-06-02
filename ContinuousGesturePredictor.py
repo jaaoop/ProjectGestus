@@ -11,38 +11,43 @@ import imutils
 # global variables
 bg = None
 
-# efect used in drection function
-efect= cv2.createBackgroundSubtractorMOG2(50, 50, True)
+def direction(ret, frame, clone, firstGray):
+    #crop a specific part of the first frame 
+    firstGRight=firstGray[10:225,590:640]
+    firstGLeft=firstGray[10:225, 300:350]
 
-def direction(ret, frame, clone, efect):
-    #crop a specific part of the video
-    left= frame[10:225,590:640]
-    right= frame[10:225, 300:350]
-    left=cv2.resize(left, (0, 0), fx=0.50, fy=0.50)
-    right=cv2.resize(right, (0, 0), fx=0.50, fy=0.50)
+    #transforms the frame in grayscale and blur it
+    grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    grayFrame = cv2.GaussianBlur(grayFrame, (5, 5), 0)
 
-    #aplly bacground subtractor on the ceoped frames
-    maskRight = efect.apply(right)
-    maskLeft = efect.apply(left)
+    #crop a specific part of the frame
+    frameGRight= grayFrame[10:225,590:640]
+    frameGLeft= grayFrame[10:225, 300:350]
+
+    #comapare the parts of the first frame with the actual frame 
+    differenceR = cv2.absdiff(firstGRight, frameGRight)
+    differenceL = cv2.absdiff(firstGLeft,frameGLeft)
+
+    a, differenceR = cv2.threshold(differenceR, 25, 255, cv2.THRESH_BINARY)
+    b, differenceL = cv2.threshold(differenceL, 25, 255, cv2.THRESH_BINARY)
 
     #count the number of white pixels to determinate the moviment
-    countRight = np.count_nonzero(maskRight)
-    countLeft = np.count_nonzero(maskLeft)
+    countRight = np.count_nonzero(differenceR)
+    countLeft = np.count_nonzero(differenceL)
 
+    #print the results of countage 
     if countRight>100:
-        print("Right: " + str(countRight))
+        print("Right")
     if countLeft> 100:
-        print("Left: " + str(countLeft))
+        print("Left")
 
     #draw a square on the clone frame 
     cv2.rectangle(clone, (640, 10), (590, 225), (255,0,0), 2)
     cv2.rectangle(clone, (350, 10), (300, 225), (255,0,0), 2)
 
     #show the croped and with  background subt
-    cv2.imshow('Left', left)
-    cv2.imshow('Right', right)
-    cv2.imshow('Mask Right', maskRight)
-    cv2.imshow('Mask Left', maskLeft)
+    cv2.imshow('Mask Right', differenceR)
+    cv2.imshow('Mask Left', differenceL)
 
 def resizeImage(imageName):
     basewidth = 100
@@ -100,6 +105,16 @@ def main():
     num_frames = 0
     start_recording = False
 
+    #get the first frame for the function direction()
+    _, firstFrame = camera.read()
+
+    #flip the fist frame so its not a mirror view 
+    firstFrame=cv2.flip(firstFrame,1)
+
+    #transforms the first frame in grayscale and blur it
+    firstGray = cv2.cvtColor(firstFrame, cv2.COLOR_BGR2GRAY)
+    firstGray = cv2.GaussianBlur(firstGray, (5, 5), 0)
+
     # keep looping, until interrupted
     while(True):
         # get the current frame
@@ -118,7 +133,7 @@ def main():
         clone = frame.copy()
 
         # counts the white pixels of the areas next to the green box
-        direction(ret,frame,clone,efect)
+        direction(ret,frame,clone,firstGray)
 
         # get the height and width of the frame
         (height, width) = frame.shape[:2]
