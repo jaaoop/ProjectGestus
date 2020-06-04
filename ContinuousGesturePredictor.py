@@ -12,6 +12,9 @@ import imutils
 bg = None
 
 def direction(ret, frame, clone, firstGray):
+    #resize the first frame to the shape of the frame
+    firstGray=cv2.resize(firstGray,(frame.shape[1],frame.shape[0]))
+
     #crop a specific part of the first frame 
     firstGRight=firstGray[10:225,590:640]
     firstGLeft=firstGray[10:225, 300:350]
@@ -25,11 +28,11 @@ def direction(ret, frame, clone, firstGray):
     frameGLeft= grayFrame[10:225, 300:350]
 
     #comapare the parts of the first frame with the actual frame 
-    differenceR = cv2.absdiff(firstGRight, frameGRight)
-    differenceL = cv2.absdiff(firstGLeft,frameGLeft)
+    differenceR = cv2.absdiff(firstGRight,frameGRight)
+    differenceL = cv2.absdiff(frameGLeft,firstGLeft)
 
-    a, differenceR = cv2.threshold(differenceR, 25, 255, cv2.THRESH_BINARY)
-    b, differenceL = cv2.threshold(differenceL, 25, 255, cv2.THRESH_BINARY)
+    a,differenceR = cv2.threshold(differenceR, 25, 255, cv2.THRESH_BINARY)
+    b,differenceL = cv2.threshold(differenceL, 25, 555, cv2.THRESH_BINARY)
 
     #count the number of white pixels to determinate the moviment
     countRight = np.count_nonzero(differenceR)
