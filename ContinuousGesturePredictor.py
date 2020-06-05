@@ -3,7 +3,6 @@ import numpy as np
 from PIL import Image
 import cv2
 import imutils
-from pynput.keyboard import Key, Controller
 import argparse
 import glob
 import os
