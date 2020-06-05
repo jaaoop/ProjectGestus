@@ -1,4 +1,4 @@
-![](https://i.imgur.com/x8p2Ygk.jpg)
+![](https://i.imgur.com/x8p2Ygk.jpg =250x250)
 # Detector de gestos através de visão computacional
 
 ## Funcionamento do projeto
