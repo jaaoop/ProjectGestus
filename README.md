@@ -1,3 +1,4 @@
+![](https://www.instagram.com/p/CA0odKOBiva/)
 # Detector de gestos através de visão computacional
 
 ## Funcionamento do projeto
