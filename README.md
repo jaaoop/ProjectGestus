@@ -1,62 +1,74 @@
-# Hand Gesture Recognition Using Background Ellimination and Convolution Neural Network
+# Detector de gestos através de visão computacional
 
-## About the Project
+<img src="https://i.imgur.com/x8p2Ygk.jpg" width="250" height="250">
 
-This is a simple application of Convolution Neural Networks combined with background ellimination to detect different hand gestures. A background ellimination algorithm extracts the hand image from webcam and uses it to train as well predict the type of gesture that is. More information about the algorithm can be found below.
+## Funcionamento do projeto
 
-## Requirements
+### Descrição
 
-* Python3
-* Tensorflow version=1.13.1
-* TfLearn
-* Opencv headless (cv2) for python3
-* Numpy
-* Pillow (PIL)
-* Imutils
+O seguinte projeto tem como foco detectar gestos da mão com a webcam e atribuir funcionalidades para as detecções, como mover personagem em um vídeo-game ou controlar peças de hardware.
 
-## File Description
+### Arquivos com passo a passo
 
-[PalmTracker.py](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network/blob/master/PalmTracker.py) : Run this file to generate custom datasets. Go into the file and change the name of the directory and make other appropriate changes.
+[ContinuousGesturePredictor.py]() faz a detecção em tempo real dos gestos. 
+1. Execute no terminal `python ContinuousGesturePredictor.py` .
+2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
+3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
+4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
+5. A janela *Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
 
-[ResizeImages.py](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network/blob/master/ResizeImages.py) : Run this file after PalmTracker.py in order to resize the images so that it can be fed into the Convolution Neural Network designed using tensorflow. The network accepts 89 x 100 dimensional image.
+[LabelGenerator.py]() gera novos gestos para treino.
+1. Execute no terminal `python LabelGenerator.py`.
+2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
+3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
+4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve posicionar a mão no quadrado desenhado e apertar a tecla **s** para começar a gerar os gestos de treino e teste. **Sugestão:** Mova a mão para diversificar.
+5. No processo de criação do novo gesto, o console irá mostrar o progresso. Ao finalizar, duas pastas serão criadas, uma de [Treino]() e uma de [Teste](), ambas com o nome do gesto.
 
-[ModelTrainer.ipynb](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network/blob/master/ModelTrainer.ipynb) : This is the model trainer file. Run this file if you want to retrain the model using your custom dataset.
+[ModelTrainer.py]() treina o modelo para detectar novos gestos.
+1. Altere a quantia de gestos que o modelo estará treinando.
+2. Execute no terminal `python ModelTrainer.py`.
+3. Aguarde até o final do treinamento.
 
-[ContinuousGesturePredictor.py](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network/blob/master/ContinuousGesturePredictor.py) : Running this file opens up your webcam and takes continuous frames of your hand image and then predicts the class of your hand gesture in realtime.
 
-## Some key architectural insights into the project
+## Instalação
 
-### Background Ellimination Algorithm
+### Python 
 
-I have used opencv for taking a running average of the background for 30 frames and then use that running average to detect the hand that has to be introduced after the background has been properly recognized.
+Recomenda-se versão 3.7.
 
-I had found a very useful article on foreground mask by [Gogul09](https://github.com/Gogul09) and i have pretty much used his code for background ellimination with a few changes in order to suit my cause.
+### Crie um ambiente virtual com o conda
 
-He has written an awesome article on the problem and you can read it up [here](https://gogul09.github.io/software/hand-gesture-recognition-p1).
+`conda create -n <nome-do-ambiente> python=3.7`<br/>
+`conda activate <nome-do-ambiente>` 
 
-### The Deep Convolution Neural Network
+### Dependências necessárias
 
-The network contains **7** hidden convolution layers with **Relu** as the activation function and **1** Fully connected layer.
+- ### TensorFlow (recomenda-se versões <= 1.15.2)
+`pip install tensorflow==1.15.2` (CPU)<br/>
+`pip install tensorflow-gpu==1.15.2` (GPU)
+- ### OpenCV
+`pip install opencv-python`
+- ### Numpy
+`pip install numpy`
+- ### Pillow
+`pip install Pillow`
+- ### Imutils
+`pip install imutils`
 
-The network is trained across **50** iterations with a batch size of **64**.
+## Informações
+Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a respeito desse e outros projetos, acesse: https://sites.google.com/unesp.br/rasunespbauru/home
 
-I kind of saw that 50 iterations kind of trains the model well and there is no increase in validation accuracy along the lines so that should be enough.
+## Autores
 
-The model achieves an accuracy of **96.6%** on the validation dataset.
+- [**Artur Starling**](https://github.com/ArturStarling)
+- [**Fabrício Amoroso**](https://github.com/lefabricion)
+- [**Gustavo Stahl**](https://github.com/GustavoStah)
+- [**João Gouvêa**](https://github.com/jaaoop)
 
-The ratio of training set to validation set is **1000 : 100**.
+## Licença
 
-## How to run the RealTime prediction
+Este projeto é gratuito e sem fins lucrativos. Sua venda é proibida.
 
-Run the [ContinuousGesturePredictor.py](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network/blob/master/ContinuousGesturePredictor.py) file and you will see a window named **Video Feed** appear on screen. Wait for a while until a window named **Thresholded** appears.
+## Creditos
 
-The next step involves pressing **"s"** on your keyboard in order to start the real-time prediction.
-
-Bring your hand in the **Green Box** drawn inside **Video Feed** window in order to see the predictions.
-Look in demo for some visual clarity.
-
-## Demo of how things look on the go
-
-Well now it's time for some demo.
-
-![Alt Text](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network/blob/master/Demo.gif)
+O projeto foi baseado no repositório [Hand Gesture Recognition using Convolution Neural Network built using Tensorflow, OpenCV and python](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network)
