@@ -1,4 +1,5 @@
 <img src="https://i.imgur.com/x8p2Ygk.jpg" width="250" height="250">
+
 # Detector de gestos através de visão computacional
 
 ## Funcionamento do projeto
