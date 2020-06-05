@@ -21,14 +21,19 @@ O seguinte projeto tem como foco detectar gestos da mão com a webcam e atribuir
 1. Execute no terminal `python LabelGenerator.py`.
 2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
 3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
-4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve posicionar a mão no quadrado desenhado e apertar a tecla **s** para começar a gerar os gestos de treino e teste. **Sugestão:** Mova a mão para diversificar.
-5. No processo de criação do novo gesto, o console irá mostrar o progresso. Ao finalizar, duas pastas serão criadas, uma de [Treino]() e uma de [Teste](), ambas com o nome do gesto.
+4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve posicionar a mão no quadrado desenhado e apertar a tecla '**s**' para começar a gerar os gestos de treino e teste. **Sugestão:** Mova a mão para diversificar os resultados.
+5. No processo de criação do novo gesto, o console irá mostrar o progresso. Ao finalizar, duas pastas serão criadas, uma em [Treino]() e uma de [Teste](), ambas com o nome do gesto.
 
 [ModelTrainer.py]() treina o modelo para detectar novos gestos.
-1. Altere a quantia de gestos que o modelo estará treinando.
-2. Execute no terminal `python ModelTrainer.py`.
+1. Certifique-se que possui as mesmas pastas em [Treino]() e [Teste]().
+2. Execute no terminal `python ModelTrainer.py -g <numero de gestos>`.
 3. Aguarde até o final do treinamento.
+>**Nota:** Um parâmetro adicional ao ModelTrainer é `-c True` que permite salvar o gráfico de treino, por padrão é `-c False`.
 
+## Recomendações ao usuário para utilizar o repositório
+- Utilize o conda para criar ambientes virtuais.
+- Use cuda e cudnn para ter um melhor desempenho (verifique se a GPU é compatível).
+- Recomenda-se Linux para realizar os procedimentos.
 
 ## Instalação
 
@@ -56,7 +61,7 @@ Recomenda-se versão 3.7.
 `pip install imutils`
 
 ## Informações
-Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a respeito desse e outros projetos, acesse: https://sites.google.com/unesp.br/rasunespbauru/home
+Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a respeito desse e outros projetos, acesse: https://sites.google.com/unesp.br/rasunespbauru/home.
 
 ## Autores
 
@@ -71,4 +76,4 @@ Este projeto é gratuito e sem fins lucrativos. Sua venda é proibida.
 
 ## Creditos
 
-O projeto foi baseado no repositório [Hand Gesture Recognition using Convolution Neural Network built using Tensorflow, OpenCV and python](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network)
+O projeto foi baseado no repositório [Hand Gesture Recognition using Convolution Neural Network built using Tensorflow, OpenCV and python](https://github.com/SparshaSaha/Hand-Gesture-Recognition-Using-Background-Elllimination-and-Convolution-Neural-Network).
