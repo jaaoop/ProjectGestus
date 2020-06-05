@@ -1,20 +1,31 @@
 import tensorflow as tf
-import tflearn
-from tflearn.layers.conv import conv_2d,max_pool_2d
-from tflearn.layers.core import input_data,dropout,fully_connected
-from tflearn.layers.estimator import regression
 import numpy as np
 from PIL import Image
 import cv2
 import imutils
 from pynput.keyboard import Key, Controller
-import time
+import argparse
+import glob
+import os
 
-keyboard = Controller()
+# Argument parser for easy modifications
+parser = argparse.ArgumentParser()
+parser.add_argument('-t', '--threshold',
+                    required=False, default=4,
+                    help="Prediction threshold for confidence filter")
+arguments = vars(parser.parse_args())
 
-# global variables
+# Get a list with the name of the gestures in alphabetical order
+gestureNames = []
+for name in glob.glob('Dataset/Train/*'):
+    gestureNames.append(name.split('/')[-1])
+gestureNames.sort()
+
+# Global variables
 bg = None
 
+# Confidence filter, it receives a vector with predictions for each 'n' frames
+# if all are the same, return True, else return False
 def samePredictions(new_predictions):
     for i in range(len(new_predictions)-1):
         if(new_predictions[0] != new_predictions[i+1]):
@@ -32,137 +43,152 @@ def resizeImage(imageName):
 
 def run_avg(image, aWeight):
     global bg
-    # initialize the background
+    # Initialize the background
     if bg is None:
         bg = image.copy().astype("float")
         return
 
-    # compute weighted average, accumulate it and update the background
+    # Compute weighted average, accumulate it and update the background
     cv2.accumulateWeighted(image, bg, aWeight)
 
 def segment(image, threshold=25):
     global bg
-    # find the absolute difference between background and current frame
+    # Find the absolute difference between background and current frame
     diff = cv2.absdiff(bg.astype("uint8"), image)
 
-    # threshold the diff image so that we get the foreground
+    # Threshold the diff image so that we get the foreground
     thresholded = cv2.threshold(diff,
                                 threshold,
                                 255,
                                 cv2.THRESH_BINARY)[1]
 
-    # get the contours in the thresholded image
+    # Get the contours in the thresholded image
     (cnts, _) = cv2.findContours(thresholded.copy(),
                                     cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)
 
-    # return None, if no contours detected
+    # Return None, if no contours detected
     if len(cnts) == 0:
         return
     else:
-        # based on contour area, get the maximum contour which is the hand
+        # Based on contour area, get the maximum contour which is the hand
         segmented = max(cnts, key=cv2.contourArea)
         return (thresholded, segmented)
 
 def main():
+    # Method global variables
     first_pass = True
     past_predictions = []
     new_predictions = []
     predictions_count = 0
-    totalOfPredictions = 4
-    # initialize weight for running average
+    predictionsThreshold = arguments['threshold']
+
+    # Show gestures found in the Dataset folder
+    print("\nGestures found: ")
+    for index, gesture in enumerate(gestureNames):
+        print("{}- {} ".format(index+1, gesture))
+    print("\n[WARNING] If during the predictions a gesture is not shown, verify if you have trained for it.")
+
+    # Initialize weight for running average
     aWeight = 0.5
 
-    # get the reference to the webcam
+    # Get the reference to the webcam
     camera = cv2.VideoCapture(0)
 
-    # region of interest (ROI) coordinates
+    # Region of interest (ROI) coordinates
     top, right, bottom, left = 10, 350, 225, 590
 
-    # initialize num of frames
+    # Initialize num of frames
     num_frames = 0
     start_recording = False
 
-    # keep looping, until interrupted
+    # Keep looping, until interrupted
     while(True):
-        # get the current frame
+        # Get the current frame
         (grabbed, frame) = camera.read()
 
-        # resize the frame
+        # Resize the frame
         frame = imutils.resize(frame, width = 700)
 
-        # flip the frame so that it is not the mirror view
+        # Flip the frame so that it is not the mirror view
         frame = cv2.flip(frame, 1)
 
-        # clone the frame
+        # Clone the frame
         clone = frame.copy()
 
-        # get the height and width of the frame
+        # Get the height and width of the frame
         (height, width) = frame.shape[:2]
 
-        # get the ROI
+        # Get the ROI
         roi = frame[top:bottom, right:left]
 
-        # convert the roi to grayscale and blur it
+        # Convert the roi to grayscale and blur it
         gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
-        # to get the background, keep looking till a threshold is reached
+        # To get the background, keep looking till a threshold is reached
         # so that our running average model gets calibrated
         if num_frames < 30:
             run_avg(gray, aWeight)
         else:
-            # segment the hand region
+            # Segment the hand region
             hand = segment(gray)
 
             # check whether hand region is segmented
             if hand is not None:
-                # if yes, unpack the thresholded image and
+                # If yes, unpack the thresholded image and
                 # segmented region
                 (thresholded, segmented) = hand
 
-                # draw the segmented region and display the frame
-                # cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
+                # Draw the segmented region and display the frame
                 if start_recording:
                     cv2.imwrite('Temp.png', thresholded)
                     resizeImage('Temp.png')
                     predictedClass, confidence = getPredictedClass()
+
+                    # For the first 'n' predictions, save the detections in a vector
+                    # the one detected will be shown
                     if first_pass:
                         past_predictions.append(predictedClass)
                         predictions_count+=1
-                        if predictions_count == totalOfPredictions:
+                        if predictions_count == predictionsThreshold:
                             predictions_count = 0
                             first_pass = False
+
+                    # For each 'n' frames save the predictions in a vector and check if
+                    # all are the same, if they do shown detection, else shown previous 
                     else:
                         new_predictions.append(predictedClass)
                         predictions_count+=1
-                        if predictions_count == totalOfPredictions:
+                        if predictions_count == predictionsThreshold:
                             if samePredictions(new_predictions):
                                 predictedClass = new_predictions[-1]
                                 past_predictions = new_predictions
                             else:
                                 predictedClass = past_predictions[-1]
-                            print("{} {} {}".format(past_predictions, new_predictions, samePredictions(new_predictions)))
                             new_predictions = []
                             predictions_count = 0
                         else:
-                            predictedClass = past_predictions[-1]
+                            predictedClass = past_predictions[-1] 
+
+                    # Show the detections made
                     showStatistics(predictedClass, confidence)
+
                 cv2.imshow("Thesholded", thresholded)
 
-        # draw the segmented hand
+        # Draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
 
-        # increment the number of frames
+        # Increment the number of frames
         num_frames += 1
 
-        # display the frame with segmented hand
+        # Display the frame with segmented hand
         cv2.imshow("Video Feed", clone)
 
-        # observe the keypress by the user
+        # Observe the keypress by the user
         keypress = cv2.waitKey(1) & 0xFF
 
-        # if the user pressed "q", then stop looping
+        # If the user pressed "q", then stop looping
         if keypress == ord("q"):
             break
         
@@ -175,38 +201,15 @@ def getPredictedClass():
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray_image = gray_image.reshape(1, 89, 100, 1)
     prediction = model.predict([gray_image])
-    return np.argmax(prediction), (np.amax(prediction) / (prediction[0][0] + prediction[0][1] + prediction[0][2]+ prediction[0][3]))
+    return np.argmax(prediction), np.amax(prediction)
 
 def showStatistics(predictedClass, confidence):
 
     textImage = np.zeros((300,512,3), np.uint8)
     className = ""
 
-    if predictedClass == 0:
-        className = "Fist"
-        # keyboard.release('w')
-        # keyboard.release('s')
-        # keyboard.release('a')
-        # keyboard.press('d')
-    elif predictedClass == 1:
-        className = "Ok"
-        # keyboard.release('a')
-        # keyboard.release('w')
-        # keyboard.release('d')
-        # keyboard.press('s')
-    elif predictedClass == 2:
-        className = "Palm"
-        # keyboard.release('a')
-        # keyboard.release('s')
-        # keyboard.release('d')
-        # keyboard.press('w')
-    elif predictedClass == 3:
-        className = "Swing"
-        # keyboard.release('s')
-        # keyboard.release('w')
-        # keyboard.release('d')
-        # keyboard.press('a')
-
+    # Get gesture name from the nameGesture variable 
+    className = gestureNames[predictedClass]
 
     cv2.putText(textImage,"Pedicted Class : " + className, 
     (30, 30), 
@@ -223,43 +226,17 @@ def showStatistics(predictedClass, confidence):
     2)
     cv2.imshow("Statistics", textImage)
 
+# Load model weights
+model = tf.keras.models.load_model("ModelWeights/GestureRecogModel_tf.tfl")
 
-
-
-# Model defined
-# tf.reset_default_graph()
-# convnet=input_data(shape=[None,89,100,1],name='input')
-# convnet=conv_2d(convnet,32,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-# convnet=conv_2d(convnet,64,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-
-# convnet=conv_2d(convnet,128,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-
-# convnet=conv_2d(convnet,256,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-
-# convnet=conv_2d(convnet,256,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-
-# convnet=conv_2d(convnet,128,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-
-# convnet=conv_2d(convnet,64,2,activation='relu')
-# convnet=max_pool_2d(convnet,2)
-
-# convnet=fully_connected(convnet,1000,activation='relu')
-# convnet=dropout(convnet,0.75)
-
-# convnet=fully_connected(convnet,3,activation='softmax')
-
-# convnet=regression(convnet,optimizer='adam',learning_rate=0.001,loss='categorical_crossentropy',name='regression')
-
-# model=tflearn.DNN(convnet,tensorboard_verbose=0)
-
-# Load Saved Model
-# model.load("TrainedModel/GestureRecogModel.tfl")
-model = tf.keras.models.load_model('TrainedModel/GestureRecogModel_tf.tfl')
-
-main()
+try:
+    main()
+except KeyboardInterrupt:
+    # Remove temp backgroud image if the program is abruptly terminated 
+    os.remove("Temp.png")
+    
+# Remove temp backgroud image
+try:
+    os.remove("Temp.png")
+except:
+    pass
