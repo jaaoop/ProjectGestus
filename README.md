@@ -19,7 +19,7 @@ O seguinte projeto tem como foco detectar gestos da mão com a webcam e atribuir
 1. Execute no terminal `python LabelGenerator.py`.
 2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
 3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
-4. Após os 30 frames iniciais, a janela *threshold* irá aparecer, nesse momento o usuário deve posicionar a mão no quadrado desenhado e apertar a tecla **s** para começar a gerar os gestos de treino e teste. **Sugestão:** Mova a mão para diversificar.
+4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve posicionar a mão no quadrado desenhado e apertar a tecla **s** para começar a gerar os gestos de treino e teste. **Sugestão:** Mova a mão para diversificar.
 5. No processo de criação do novo gesto, o console irá mostrar o progresso. Ao finalizar, duas pastas serão criadas, uma de [Treino]() e uma de [Teste](), ambas com o nome do gesto.
 
 [ModelTrainer.py](): Treina o modelo para detectar novos gestos.
