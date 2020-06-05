@@ -10,22 +10,22 @@ O seguinte projeto tem como foco detectar gestos da mão com a webcam e atribuir
 
 ### Arquivos com passo a passo
 
-[ContinuousGesturePredictor.py]() faz a detecção em tempo real dos gestos. 
+[ContinuousGesturePredictor.py](https://github.com/jaaoop/ProjectGestus/blob/master/ContinuousGesturePredictor.py) faz a detecção em tempo real dos gestos. 
 1. Execute no terminal `python ContinuousGesturePredictor.py` .
 2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
 3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
 4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
 5. A janela *Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
 
-[LabelGenerator.py]() gera novos gestos para treino.
+[LabelGenerator.py](https://github.com/jaaoop/ProjectGestus/blob/master/LabelGenerator.py) gera novos gestos para treino.
 1. Execute no terminal `python LabelGenerator.py`.
 2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
 3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
 4. Após os 30 frames iniciais, a janela *Thresholded* irá aparecer, nesse momento o usuário deve posicionar a mão no quadrado desenhado e apertar a tecla '**s**' para começar a gerar os gestos de treino e teste. **Sugestão:** Mova a mão para diversificar os resultados.
-5. No processo de criação do novo gesto, o console irá mostrar o progresso. Ao finalizar, duas pastas serão criadas, uma em [Treino]() e uma de [Teste](), ambas com o nome do gesto.
+5. No processo de criação do novo gesto, o console irá mostrar o progresso. Ao finalizar, duas pastas serão criadas, uma em [Treino](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Train) e uma de [Teste](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Test), ambas com o nome do gesto.
 
-[ModelTrainer.py]() treina o modelo para detectar novos gestos.
-1. Certifique-se que possui as mesmas pastas em [Treino]() e [Teste]().
+[ModelTrainer.py](https://github.com/jaaoop/ProjectGestus/blob/master/ModelTrainer.py) treina o modelo para detectar novos gestos.
+1. Certifique-se que possui as mesmas pastas em [Treino](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Train) e [Teste](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Test).
 2. Execute no terminal `python ModelTrainer.py -g <numero de gestos>`.
 3. Aguarde até o final do treinamento.
 >**Nota:** Um parâmetro adicional ao ModelTrainer é `-c True` que permite salvar o gráfico de treino, por padrão é `-c False`.
