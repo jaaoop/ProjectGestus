@@ -77,7 +77,7 @@ Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a
 
 ## Licença
 
-Este projeto é gratuito e sem fins lucrativos. Sua venda é proibida.
+Este projeto é gratuito e sem fins lucrativos.
 
 ## Creditos
 
