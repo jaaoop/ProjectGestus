@@ -2,12 +2,13 @@ import tensorflow as tf
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 import cv2
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import argparse
 import os
+from os.path import join, split
 import glob
 
 # Argument parser for easy modifications
@@ -38,33 +39,33 @@ class Callback(tf.keras.callbacks.Callback):
 testFolder = []
 trainFolder = []
 
-# If train folder or test folder does not exist, exit
-if not(os.path.exists('Dataset/Train')):
-    print('[ERROR] Dataset/Train path does not exist')
-    exit()
-if not(os.path.exists('Dataset/Test')):
-    print('[ERROR] Dataset/Test path does not exist')
+# If train folder or/and test folder does not exist, exit
+if not os.path.exists(join('Dataset','Train')) or not os.path.exists(join('Dataset','Test')):
+    print('[ERROR] Train or/and Test path does not exist')
     exit()
 
 # Get name of train and test folders
-for folder in glob.glob('Dataset/Train/*'):
-    trainFolder.append(folder.split('/')[0])
+for folder in glob.glob(join(join('Dataset', 'Train'), '*')):
+    trainFolder.append(split(folder)[-1])
     
-for folder in glob.glob('Dataset/Test/*'):
-    testFolder.append(folder.split('/')[0])
+for folder in glob.glob(join(join('Dataset', 'Test'), '*')):
+    testFolder.append(split(folder)[-1])
 
 # If the number of train folders is different than test folders, exit
 testFolder.sort()
 trainFolder.sort()
-assert trainFolder == testFolder, "[ERROR] Train or/and test folder is missing."
+
+if not trainFolder == testFolder:
+    print("[ERROR] Train and test folders are different")
+    exit()
 
 # Get images for training and testing
 testImages_count = 0
 trainImages_count = 0
-for _, folder, images in os.walk('Dataset/Train'):
+for _, folder, images in os.walk(join('Dataset','Train')):
     trainImages_count+=len(images)
 
-for _, folder, images in os.walk('Dataset/Test'):
+for _, folder, images in os.walk(join('Dataset','Test')):
     testImages_count+=len(images)
 
 batch_size = 16
@@ -80,7 +81,7 @@ trainImagesGen = ImageDataGenerator(rescale=1.0/255.0,
                                   )
 
 # Load train images
-trainImages = trainImagesGen.flow_from_directory('Dataset/Train', 
+trainImages = trainImagesGen.flow_from_directory(join('Dataset','Train'), 
                                                     batch_size=batch_size, 
                                                     target_size=(89,100), 
                                                     class_mode='categorical', 
@@ -90,7 +91,7 @@ trainImages = trainImagesGen.flow_from_directory('Dataset/Train',
 testImagesGen = ImageDataGenerator(rescale=1.0/255.0)
 
 # Load test images 
-testImages = testImagesGen.flow_from_directory('Dataset/Test', 
+testImages = testImagesGen.flow_from_directory(join('Dataset','Test'), 
                                                 batch_size=batch_size, 
                                                 target_size=(89,100), 
                                                 class_mode='categorical', 
@@ -133,7 +134,7 @@ history = model.fit_generator(trainImages,
                                 callbacks = [callback])
 
 # Save model weights
-model.save("ModelWeights/GestureRecogModel_tf.tfl")
+model.save(join("ModelWeights","GestureRecogModel_tf.tfl"))
 
 # Remove temp_chart image
 if arguments['chart'] == False:

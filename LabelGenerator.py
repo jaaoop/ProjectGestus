@@ -2,9 +2,40 @@
 import cv2
 import imutils
 import numpy as np
+import os
+from os.path import join, split
+import argparse
+
+# Argument parser for easy modifications
+parser = argparse.ArgumentParser()
+parser.add_argument('-n', '--name',
+                    required=True,
+                    help="Name of the gesture")
+parser.add_argument('-t', '--training',
+                    required=False, default=1000,
+                    help="Number of training images")
+arguments = vars(parser.parse_args())
 
 # global variables
 bg = None
+gestureTrainFolder = join(join('Dataset', 'Train'), arguments['name'])
+gestureTestFolder = join(join('Dataset', 'Test'), arguments['name'])
+
+def createGestureFolders():
+
+    # Create gesture train folder if does not exist
+    if not os.path.exists(gestureTrainFolder):
+        try:
+            os.mkdir(gestureTrainFolder)
+        except:
+            print("[ERROR] Dataset/Train does not exists")
+
+    # Create gesture test folder if does not exist
+    if not os.path.exists(gestureTestFolder):
+        try:
+            os.mkdir(gestureTestFolder)
+        except:
+            print("[ERROR] Dataset/Test does not exists")
 
 def run_avg(image, aWeight):
     global bg
@@ -41,6 +72,9 @@ def segment(image, threshold=25):
         return (thresholded, segmented)
 
 def main():
+    # Method global variables
+    size = 350
+
     # initialize weight for running average
     aWeight = 0.5
 
@@ -85,7 +119,11 @@ def main():
             # so that our running average model gets calibrated
             if num_frames < 30:
                 run_avg(gray, aWeight)
-                print(num_frames)
+                print("[INFO] Taking background ({}/30)".format(num_frames+1))
+
+            elif num_frames == 30:
+                print("[INFO] Ready for recording")
+
             else:
                 # segment the hand region
                 hand = segment(gray)
@@ -96,14 +134,38 @@ def main():
                     # segmented region
                     (thresholded, segmented) = hand
 
-                    # draw the segmented region and display the frame
-                    cv2.drawContours(clone, [segmented + (right, top)], -1, (0, 0, 255))
                     if start_recording:
 
-                        # Mention the directory in which you wanna store the images followed by the image name
-                        cv2.imwrite("Dataset/Test/Ok/ok_" + str(image_num) + '.png', thresholded)
+                        # Resize image since the model requires images with width=100 and height=89
+                        thresholded = cv2.resize(thresholded, (100, 89), interpolation=cv2.INTER_AREA)
+
+                        # Save train images
+                        if image_num<arguments['training']:
+                            cv2.imwrite(join(gestureTrainFolder, arguments['name'].lower()+'_') + str(image_num) + '.png', thresholded)
+                        
+                        # Save test images
+                        else:
+                            cv2.imwrite(join(gestureTestFolder, arguments['name'].lower()+'_') + str(image_num - arguments['training']) + '.png', 
+                                        thresholded)
+
+                        # Show generator progress
+                        print("Progress: {}%".format((image_num+1)*100 // (arguments['training'] + int(arguments['training']*0.1))))
                         image_num += 1
-                        print(image_num)
+                        
+                        # Increase image size for showing to the user
+                        thresholded = cv2.resize(thresholded, (size,size), interpolation=cv2.INTER_CUBIC)
+
+                    else:
+                        # Info about needing to press 's' to start the generator
+                        thresholded = cv2.putText(np.zeros((size,size), np.uint8),
+                                                    "Press 's' to start the generator", 
+                                                    (20, size//2), 
+                                                    cv2.FONT_HERSHEY_SIMPLEX, 
+                                                    0.6,
+                                                    (255, 255, 255),
+                                                    2)
+
+                    # Show Threshold image
                     cv2.imshow("Thesholded", thresholded)
 
             # draw the segmented hand
@@ -119,15 +181,19 @@ def main():
             keypress = cv2.waitKey(1) & 0xFF
 
             # if the user pressed "q", then stop looping
-            if keypress == ord("q") or image_num > 1000:
+            if keypress == ord("q") or image_num >= arguments['training'] + int(arguments['training']*0.1):
+                print('[INFO] The process ended successfully')
                 break
         
             if keypress == ord("s"):
+                #Create gesture test and train folders
+                createGestureFolders()
                 start_recording = True
 
         else:
-            print("[Warning!] Error input, Please check your(camra Or video)")
+            print("[WARNING] Error input. Please check your(camera or video)")
             break
+
     # free up memory
     camera.release()
     cv2.destroyAllWindows()

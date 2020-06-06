@@ -6,6 +6,7 @@ import imutils
 import argparse
 import glob
 import os
+from os.path import join, split
 
 # Argument parser for easy modifications
 parser = argparse.ArgumentParser()
@@ -16,8 +17,9 @@ arguments = vars(parser.parse_args())
 
 # Get a list with the name of the gestures in alphabetical order
 gestureNames = []
-for name in glob.glob('Dataset/Train/*'):
-    gestureNames.append(name.split('/')[-1])
+
+for name in glob.glob(join(join('Dataset', 'Train'), '*')):
+    gestureNames.append(split(name)[-1])
 gestureNames.sort()
 
 # Global variables
@@ -81,6 +83,7 @@ def main():
     new_predictions = []
     predictions_count = 0
     predictionsThreshold = arguments['threshold']
+    size = 350
 
     # Show gestures found in the Dataset folder
     print("\nGestures found: ")
@@ -144,7 +147,6 @@ def main():
                     cv2.imwrite('Temp.png', thresholded)
                     resizeImage('Temp.png')
                     predictedClass, confidence = getPredictedClass()
-
                     # For the first 'n' predictions, save the detections in a vector
                     # the one detected will be shown
                     if first_pass:
@@ -170,10 +172,15 @@ def main():
                         else:
                             predictedClass = past_predictions[-1] 
 
-                    # Show the detections made
-                    showStatistics(predictedClass, confidence)
+                    textImage = showStatistics(predictedClass, confidence)
 
-                cv2.imshow("Thesholded", thresholded)
+                else:
+                    textImage = showWaitingStatistics()
+
+                thresholded = cv2.resize(thresholded, (size,size), interpolation=cv2.INTER_CUBIC)
+
+                # Show the detections made
+                cv2.imshow("Thresholded and Statistics", np.concatenate((thresholded, textImage), 1))
 
         # Draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
@@ -202,31 +209,42 @@ def getPredictedClass():
     prediction = model.predict([gray_image])
     return np.argmax(prediction), np.amax(prediction)
 
+def showWaitingStatistics():
+    textImage = np.zeros((size,size), np.uint8)
+
+    cv2.putText(textImage, "Press 's' to start the predictions", 
+    (0, size//2), 
+    cv2.FONT_HERSHEY_SIMPLEX, 
+    0.6,
+    (255, 255, 255),
+    2)
+    return textImage
+
 def showStatistics(predictedClass, confidence):
 
-    textImage = np.zeros((300,512,3), np.uint8)
+    textImage = np.zeros((size,size), np.uint8)
     className = ""
 
     # Get gesture name from the nameGesture variable 
     className = gestureNames[predictedClass]
 
     cv2.putText(textImage,"Pedicted Class : " + className, 
-    (30, 30), 
+    (30, size//2 - 20), 
     cv2.FONT_HERSHEY_SIMPLEX, 
-    1,
+    0.8,
     (255, 255, 255),
     2)
 
-    cv2.putText(textImage,"Confidence : " + str(confidence * 100) + '%', 
-    (30, 100), 
+    cv2.putText(textImage,"Confidence : " + str(round(confidence * 100, 3)) + '%', 
+    (30, size//2 + 20), 
     cv2.FONT_HERSHEY_SIMPLEX, 
-    1,
+    0.7,
     (255, 255, 255),
     2)
-    cv2.imshow("Statistics", textImage)
+    return textImage
 
 # Load model weights
-model = tf.keras.models.load_model("ModelWeights/GestureRecogModel_tf.tfl")
+model = tf.keras.models.load_model(join("ModelWeights","GestureRecogModel_tf.tfl"))
 
 try:
     main()
