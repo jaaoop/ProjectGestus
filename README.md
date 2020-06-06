@@ -70,6 +70,9 @@ Recomenda-se versão 3.7.
 - ### MatPlotLib
 `pip install matplotlib`
 
+### Baixe o repositório
+Faça download do repositório ou clone executando no terminal `git clone https://github.com/jaaoop/ProjectGestus.git`. Após esses passos estará pronto para uso.
+
 ## Informações
 Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a respeito desse e outros projetos, acesse: https://sites.google.com/unesp.br/rasunespbauru/home.
 
