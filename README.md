@@ -52,7 +52,7 @@ Recomenda-se versão 3.7.
 `conda activate <nome-do-ambiente>` 
 
 ### Dependências necessárias
-Instalação em uma linha:<br/>
+**Instalação em uma linha**<br/>
 `pip install tensorflow-gpu==1.15.2 opencv-python numpy Pillow imutils scipy matplotlib`
 - ### TensorFlow (recomenda-se versões <= 1.15.2)
 `pip install tensorflow==1.15.2` (CPU)<br/>
