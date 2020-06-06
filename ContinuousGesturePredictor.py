@@ -24,6 +24,7 @@ gestureNames.sort()
 
 # Global variables
 bg = None
+size = 350
 
 # Confidence filter, it receives a vector with predictions for each 'n' frames
 # if all are the same, return True, else return False
@@ -83,7 +84,6 @@ def main():
     new_predictions = []
     predictions_count = 0
     predictionsThreshold = arguments['threshold']
-    size = 350
 
     # Show gestures found in the Dataset folder
     print("\nGestures found: ")
