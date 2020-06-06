@@ -64,6 +64,10 @@ Recomenda-se versão 3.7.
 `pip install Pillow`
 - ### Imutils
 `pip install imutils`
+- ### SciPy
+`pip install scipy`
+- ### MatPlotLib
+`pip install matplotlib`
 
 ## Informações
 Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a respeito desse e outros projetos, acesse: https://sites.google.com/unesp.br/rasunespbauru/home.
