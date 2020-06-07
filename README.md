@@ -29,7 +29,7 @@ O seguinte projeto tem como foco detectar gestos da mão com a webcam e atribuir
 
 [**ModelTrainer.py**](https://github.com/jaaoop/ProjectGestus/blob/master/ModelTrainer.py) treina o modelo para detectar novos gestos.
 1. Certifique-se que possui as mesmas pastas em [Treino](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Train) e [Teste](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Test).
-2. Execute no terminal `python ModelTrainer.py -g <numero-de-gestos>`.
+2. Execute no terminal `python ModelTrainer.py`.
 3. Aguarde até o final do treinamento.
 
 >**Nota:** Um parâmetro adicional do ModelTrainer é `-c True` que permite salvar o gráfico de treino. Por padrão o parâmetro é `-c False`.
