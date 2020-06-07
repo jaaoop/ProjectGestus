@@ -128,56 +128,62 @@ def main():
                 # segment the hand region
                 hand = segment(gray)
 
-                # check whether hand region is segmented
-                if hand is not None:
-                    # if yes, unpack the thresholded image and
-                    # segmented region
-                    (thresholded, segmented) = hand
+                # Check if user started the predictions,
+                # otherwise show instructions
+                if start_recording:
 
-                    if start_recording:
+                    # Check if there's a hand detection
+                    if hand is not None:
+                        # if yes, unpack the thresholded image and
+                        # segmented region
+                        (thresholded, segmented) = hand
 
                         # Resize image since the model requires images with width=100 and height=89
                         thresholded = cv2.resize(thresholded, (100, 89), interpolation=cv2.INTER_AREA)
 
-                        # Save train images
-                        if image_num<arguments['training']:
-                            cv2.imwrite(join(gestureTrainFolder, arguments['name'].lower()+'_') + str(image_num) + '.png', thresholded)
-                        
-                        # Save test images
-                        else:
-                            cv2.imwrite(join(gestureTestFolder, arguments['name'].lower()+'_') + str(image_num - arguments['training']) + '.png', 
-                                        thresholded)
-
-                        # Show generator progress
-                        print("Progress: {}%".format((image_num+1)*100 // (arguments['training'] + int(arguments['training']*0.1))))
-                        image_num += 1
-                        
-                        # Increase image size for showing to the user
-                        thresholded = cv2.resize(thresholded, (size,size), interpolation=cv2.INTER_CUBIC)
-
                     else:
-                        # Info about needing to press 's' to start the generator
-                        thresholded = cv2.putText(np.zeros((size,size), np.uint8),
-                                                    "Press 's' to start the generator", 
-                                                    (20, size//2), 
-                                                    cv2.FONT_HERSHEY_SIMPLEX, 
-                                                    0.6,
-                                                    (255, 255, 255),
-                                                    2)
+                        # As it has no hand make thresholded all black
+                        thresholded = np.ones((89, 100), np.uint8)
 
-                    # Show Threshold image
-                    cv2.imshow("Thesholded", thresholded)
+                    # Save train images
+                    if image_num<arguments['training']:
+                        cv2.imwrite(join(gestureTrainFolder, arguments['name'].lower()+'_') + str(image_num) + '.png', thresholded)
+                    
+                    # Save test images
+                    else:
+                        cv2.imwrite(join(gestureTestFolder, arguments['name'].lower()+'_') + str(image_num - arguments['training']) + '.png', 
+                                    thresholded)
 
-            # draw the segmented hand
+                    # Show generator progress
+                    print("Progress: {}%".format((image_num+1)*100 // (arguments['training'] + int(arguments['training']*0.1))))
+                    image_num += 1
+                    
+                    # Increase image size for showing to the user
+                    thresholded = cv2.resize(thresholded, (size,size), interpolation=cv2.INTER_CUBIC)
+
+                else:
+                    # Info about needing to press 's' to start the generator
+                    thresholded = cv2.putText(np.zeros((size,size), np.uint8),
+                                                "Press 's' to start the generator", 
+                                                (20, size//2), 
+                                                cv2.FONT_HERSHEY_SIMPLEX, 
+                                                0.6,
+                                                (255, 255, 255),
+                                                2)
+
+                # Show Thresholded image
+                cv2.imshow("Thesholded", thresholded)
+
+            # Draw the segmented hand
             cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
 
-            # increment the number of frames
+            # Increment the number of frames
             num_frames += 1
 
-            # display the frame with segmented hand
+            # Display the frame with segmented hand
             cv2.imshow("Video Feed", clone)
 
-            # observe the keypress by the user
+            # Observe the keypress by the user
             keypress = cv2.waitKey(1) & 0xFF
 
             # if the user pressed "q", then stop looping
@@ -194,7 +200,7 @@ def main():
             print("[WARNING] Error input. Please check your(camera or video)")
             break
 
-    # free up memory
+    # Free up memory
     camera.release()
     cv2.destroyAllWindows()
 

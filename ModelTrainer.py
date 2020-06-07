@@ -13,9 +13,6 @@ import glob
 
 # Argument parser for easy modifications
 parser = argparse.ArgumentParser()
-parser.add_argument('-g', '--gestures',
-                    required=True, default=4,
-                    help="Number of trained gestures")
 parser.add_argument('-c', '--chart',
                     required=False, default=False,
                     help="Keep train chart saved")
@@ -58,6 +55,8 @@ trainFolder.sort()
 if not trainFolder == testFolder:
     print("[ERROR] Train and test folders are different")
     exit()
+else:
+    numGestures = len(trainFolder)
 
 # Get images for training and testing
 testImages_count = 0
@@ -116,7 +115,7 @@ model = Sequential([Conv2D(32, (2,2), activation = 'relu', input_shape = [89, 10
                     Flatten(),
                     Dense(1000, activation='relu'),
                     Dropout(.75),
-                    Dense(arguments['gestures'], activation='softmax')])
+                    Dense(numGestures, activation='softmax')])
 
 # Define the CNN model
 adam = Adam(learning_rate = 0.001)

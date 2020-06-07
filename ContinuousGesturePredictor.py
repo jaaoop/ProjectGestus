@@ -136,51 +136,74 @@ def main():
             # Segment the hand region
             hand = segment(gray)
 
-            # check whether hand region is segmented
-            if hand is not None:
-                # If yes, unpack the thresholded image and
-                # segmented region
-                (thresholded, segmented) = hand
+            # Check if user started the predictions,
+            # otherwise show instructions
+            if start_recording:
 
-                # Draw the segmented region and display the frame
-                if start_recording:
+                # Check if there's a hand detection
+                if hand is not None:
+
+                    # If yes, unpack the thresholded image and
+                    # segmented region
+                    (thresholded, segmented) = hand
+
                     cv2.imwrite('Temp.png', thresholded)
                     resizeImage('Temp.png')
+                    
+                    # Get predicted class and confidence
                     predictedClass, confidence = getPredictedClass()
-                    # For the first 'n' predictions, save the detections in a vector
-                    # the one detected will be shown
-                    if first_pass:
-                        past_predictions.append(predictedClass)
-                        predictions_count+=1
-                        if predictions_count == predictionsThreshold:
-                            predictions_count = 0
-                            first_pass = False
 
-                    # For each 'n' frames save the predictions in a vector and check if
-                    # all are the same, if they do shown detection, else shown previous 
-                    else:
-                        new_predictions.append(predictedClass)
-                        predictions_count+=1
-                        if predictions_count == predictionsThreshold:
-                            if samePredictions(new_predictions):
-                                predictedClass = new_predictions[-1]
-                                past_predictions = new_predictions
-                            else:
-                                predictedClass = past_predictions[-1]
-                            new_predictions = []
-                            predictions_count = 0
+                    # Resize threshold by size x size for better visualization
+                    thresholded = cv2.resize(thresholded, (size,size), interpolation=cv2.INTER_CUBIC)
+                
+                else:
+                    # As it has no hand make thresholded all black and class 'Null'
+                    thresholded = np.ones((size,size), np.uint8)
+                    predictedClass = -1
+                    
+                # For the first 'n' predictions, save the detections in a vector
+                # the one detected will be shown
+                if first_pass:
+                    past_predictions.append(predictedClass)
+                    predictions_count+=1
+                    if predictions_count == predictionsThreshold:
+                        predictions_count = 0
+                        first_pass = False
+
+                # For each 'n' frames save the predictions in a vector and check if
+                # all are the same, if they do shown detection, else shown previous 
+                else:
+                    new_predictions.append(predictedClass)
+                    predictions_count+=1
+                    if predictions_count == predictionsThreshold:
+                        print(new_predictions)
+                        if samePredictions(new_predictions):
+                            predictedClass = new_predictions[-1]
+                            past_predictions = new_predictions
                         else:
-                            predictedClass = past_predictions[-1] 
+                            predictedClass = past_predictions[-1]
+                        new_predictions = []
+                        predictions_count = 0
+                    else:
+                        predictedClass = past_predictions[-1] 
 
+                if hand is not None:
+                    # Show text with class and confidence
                     textImage = showStatistics(predictedClass, confidence)
 
                 else:
-                    textImage = showWaitingStatistics()
+                    # If does not detect hand, show class Null
+                    textImage = showStatistics(None, None, None)
+                
+            else:
+                # Info about needing to press 's' to start the predictions 
+                textImage = showWaitingStatistics()
 
-                thresholded = cv2.resize(thresholded, (size,size), interpolation=cv2.INTER_CUBIC)
-
-                # Show the detections made
-                cv2.imshow("Thresholded and Statistics", np.concatenate((thresholded, textImage), 1))
+                # Make thresholded all black
+                thresholded = np.ones((size,size), np.uint8)
+            
+            # Show the detections made
+            cv2.imshow("Thresholded and Statistics", np.concatenate((thresholded, textImage), 1))
 
         # Draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
@@ -220,13 +243,21 @@ def showWaitingStatistics():
     2)
     return textImage
 
-def showStatistics(predictedClass, confidence):
+def showStatistics(predictedClass, confidence, containGesture = True):
 
     textImage = np.zeros((size,size), np.uint8)
     className = ""
 
-    # Get gesture name from the nameGesture variable 
-    className = gestureNames[predictedClass]
+    # Check if the prediction contains a gesture,
+    # if does not contain the gesture will be named 'Null'
+    if containGesture:
+
+        # Get gesture name from the nameGesture variable 
+        className = gestureNames[predictedClass]
+
+    else:
+        className = "Null"
+        confidence = 1
 
     cv2.putText(textImage,"Pedicted Class : " + className, 
     (30, size//2 - 20), 
