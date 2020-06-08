@@ -25,23 +25,29 @@ Recomenda-se versão 3.7.
 `conda activate <nome-do-ambiente>` 
 
 ### Dependências necessárias
+
 **Instalação em uma linha**<br/>
-`pip install tensorflow-gpu==1.15.2 opencv-python numpy Pillow imutils scipy matplotlib`<br/>
-ou <br/>
-`pip install -r requirements.txt` (após baixar o repositório)
+`pip install tensorflow-gpu==1.15.2 opencv-python numpy Pillow imutils scipy matplotlib`
+
 - ### TensorFlow (recomenda-se versões <= 1.15.2)
 `pip install tensorflow==1.15.2` (CPU)<br/>
 `pip install tensorflow-gpu==1.15.2` (GPU)
+
 - ### OpenCV
 `pip install opencv-python`
+
 - ### Numpy
 `pip install numpy`
+
 - ### Pillow
 `pip install Pillow`
+
 - ### Imutils
 `pip install imutils`
+
 - ### SciPy
 `pip install scipy`
+
 - ### MatPlotLib
 `pip install matplotlib`
 
