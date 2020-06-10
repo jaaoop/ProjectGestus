@@ -18,16 +18,16 @@ def direction(ret, frame, clone, firstGray, start_recording):
         firstGray=cv2.resize(firstGray,(frame.shape[1],frame.shape[0]))
 
         #crop a specific part of the first frame 
-        firstGRight=firstGray[10:225,590:640]
-        firstGLeft=firstGray[10:225, 300:350]
+        firstGRight=firstGray[10:225,590:620]
+        firstGLeft=firstGray[10:225, 320:350]
 
         #transforms the frame in grayscale and blur it
         grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         grayFrame = cv2.GaussianBlur(grayFrame, (5, 5), 0)
 
         #crop a specific part of the frame
-        frameGRight= grayFrame[10:225,590:640]
-        frameGLeft= grayFrame[10:225, 300:350]
+        frameGRight= grayFrame[10:225,590:620]
+        frameGLeft= grayFrame[10:225, 320:350]
 
         #comapare the parts of the first frame with the actual frame 
         differenceR = cv2.absdiff(firstGRight,frameGRight)
@@ -41,9 +41,9 @@ def direction(ret, frame, clone, firstGray, start_recording):
         countLeft = np.count_nonzero(differenceL)
 
         #print the results of countage 
-        if countRight>100:
+        if countRight>50:
             print("Right")
-        if countLeft> 100:
+        if countLeft> 50:
             print("Left")
         
         #show the croped and with  background subt
@@ -51,10 +51,9 @@ def direction(ret, frame, clone, firstGray, start_recording):
         cv2.imshow('Mask Left', differenceL)
 
     #draw a square on the clone frame 
-    cv2.rectangle(clone, (640, 10), (590, 225), (255,0,0), 2)
-    cv2.rectangle(clone, (350, 10), (300, 225), (255,0,0), 2)
+    cv2.rectangle(clone, (620, 10), (590, 225), (255,0,0), 2)
+    cv2.rectangle(clone, (350, 10), (320, 225), (255,0,0), 2)
 
-   
 
 def resizeImage(imageName):
     basewidth = 100
