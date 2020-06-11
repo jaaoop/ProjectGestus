@@ -2,6 +2,8 @@
 
 <img src="https://i.imgur.com/x8p2Ygk.jpg" width="250" height="250">
 
+*Read this in other languages: [English](https://github.com/jaaoop/ProjectGestus/new/master), [Portuguese](https://github.com/jaaoop/ProjectGestus/tree/master/Lang/README.pt.md).*
+
 ## Funcionamento do projeto
 
 ### Descrição
