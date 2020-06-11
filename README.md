@@ -10,7 +10,7 @@
 
 The following project has the purpose of detect hand gestures and apply functionalities to the detections, such as moving a video game character or controlling hardware parts. 
 
-## User recommendation for using the repository
+## Recommendations for using the repository
 - Use conda to create virtual environments.
 - Use cuda and cudnn for better performance (verify if GPU is compatible).
 - Linux is recommended for all procedures.
