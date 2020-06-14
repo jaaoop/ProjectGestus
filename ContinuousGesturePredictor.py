@@ -22,7 +22,7 @@ for name in glob.glob(join(join('Dataset', 'Train'), '*')):
     gestureNames.append(split(name)[-1])
 gestureNames.sort()
 
-# Global variables
+# global variables
 bg = None
 size = 350
 
@@ -33,6 +33,49 @@ def samePredictions(new_predictions):
         if(new_predictions[0] != new_predictions[i+1]):
             return False
     return True
+
+
+def direction(ret, frame, clone, firstGray, start_recording):
+    if start_recording:
+        #resize the first frame to the shape of the frame
+        firstGray=cv2.resize(firstGray,(frame.shape[1],frame.shape[0]))
+
+        #crop a specific part of the first frame 
+        firstGRight=firstGray[10:225,590:620]
+        firstGLeft=firstGray[10:225, 320:350]
+
+        #transforms the frame in grayscale and blur it
+        grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        grayFrame = cv2.GaussianBlur(grayFrame, (5, 5), 0)
+
+        #crop a specific part of the frame
+        frameGRight= grayFrame[10:225,590:620]
+        frameGLeft= grayFrame[10:225, 320:350]
+
+        #comapare the parts of the first frame with the actual frame 
+        differenceR = cv2.absdiff(firstGRight,frameGRight)
+        differenceL = cv2.absdiff(frameGLeft,firstGLeft)
+
+        a,differenceR = cv2.threshold(differenceR, 25, 255, cv2.THRESH_BINARY)
+        b,differenceL = cv2.threshold(differenceL, 25, 555, cv2.THRESH_BINARY)
+
+        #count the number of white pixels to determinate the moviment
+        countRight = np.count_nonzero(differenceR)
+        countLeft = np.count_nonzero(differenceL)
+
+        #print the results of countage 
+        if countRight>50:
+            print("Right")
+        if countLeft> 50:
+            print("Left")
+        
+        #show the croped and with  background subt
+        cv2.imshow('Mask Right', differenceR)
+        cv2.imshow('Mask Left', differenceL)
+
+    #draw a square on the clone frame 
+    cv2.rectangle(clone, (620, 10), (590, 225), (255,0,0), 2)
+    cv2.rectangle(clone, (350, 10), (320, 225), (255,0,0), 2)
 
 
 def resizeImage(imageName):
@@ -104,12 +147,18 @@ def main():
     num_frames = 0
     start_recording = False
 
-    # Keep looping, until interrupted
+    #init frirtGray frame 
+    firstGray = 0
+
+    # keep looping, until interrupted
     while(True):
         # Get the current frame
         (grabbed, frame) = camera.read()
 
-        # Resize the frame
+        #get the frame for direction function
+        ret, frame = camera.read() 
+
+        # resize the frame
         frame = imutils.resize(frame, width = 700)
 
         # Flip the frame so that it is not the mirror view
@@ -118,7 +167,10 @@ def main():
         # Clone the frame
         clone = frame.copy()
 
-        # Get the height and width of the frame
+        # counts the white pixels of the areas next to the green box
+        direction(ret,frame,clone,firstGray,start_recording)
+
+        # get the height and width of the frame
         (height, width) = frame.shape[:2]
 
         # Get the ROI
@@ -223,6 +275,16 @@ def main():
         
         if keypress == ord("s"):
             start_recording = True
+            
+            #get the first frame for the function direction()
+            _, firstFrame = camera.read()
+
+            #flip the fist frame so its not a mirror view 
+            firstFrame=cv2.flip(firstFrame,1)
+
+            #transforms the first frame in grayscale and blur it
+            firstGray = cv2.cvtColor(firstFrame, cv2.COLOR_BGR2GRAY)
+            firstGray = cv2.GaussianBlur(firstGray, (5, 5), 0)
 
 def getPredictedClass():
     # Predict
