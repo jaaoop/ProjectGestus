@@ -64,14 +64,10 @@ def direction(ret, frame, clone, firstGray, start_recording):
         countLeft = np.count_nonzero(differenceL)
 
         #print the results of countage 
-        if countRight>50:
-            print("Right")
-        if countLeft> 50:
-            print("Left")
-        
-        #show the croped and with  background subt
-        cv2.imshow('Mask Right', differenceR)
-        cv2.imshow('Mask Left', differenceL)
+        # if countRight>50:
+        #     print("Right")
+        # if countLeft> 50:
+        #     print("Left")
 
     #draw a square on the clone frame 
     cv2.rectangle(clone, (620, 10), (590, 225), (255,0,0), 2)
@@ -228,7 +224,6 @@ def main():
                     new_predictions.append(predictedClass)
                     predictions_count+=1
                     if predictions_count == predictionsThreshold:
-                        print(new_predictions)
                         if samePredictions(new_predictions):
                             predictedClass = new_predictions[-1]
                             past_predictions = new_predictions
