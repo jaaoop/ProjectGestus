@@ -172,8 +172,11 @@ def main():
         # Get the ROI
         roi = frame[top:bottom, right:left]
 
+        #HSV 
+        hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
         # Convert the roi to grayscale and blur it
-        gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(hsv, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
         # To get the background, keep looking till a threshold is reached
