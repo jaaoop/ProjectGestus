@@ -315,3 +315,11 @@ class continuousGesturePredictor():
         (255, 255, 255),
         2)
         return textImage
+
+camera=cv2.VideoCapture(0)
+predizGesto=continuousGesturePredictor()
+while(True):
+    _, frame = camera.read()
+    predizGesto.main(frame)
+    if predizGesto.keypress == ord("q"): #Press 'q' to exit
+        break
