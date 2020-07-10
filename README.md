@@ -58,14 +58,51 @@ Download the repository or clone by executing in the shell `git clone https://gi
 
 ### Files guide
 
-[**ContinuousGesturePredictor.py**](https://github.com/jaaoop/ProjectGestus/blob/master/ContinuousGesturePredictor.py) make gestures detection in real time. 
+[**ContinuousGesturePredictor.py**](https://github.com/jaaoop/ProjectGestus/blob/master/ContinuousGesturePredictor.py) makes gesture detection in real time. 
 1. Execute in the shell `python ContinuousGesturePredictor.py` .
 2. When the file is open, the webcam will start and the recording will be shown for the user.
 3. In the open window, a square will be drawn and, during 30 frames, will take the area as background. Taking this to count, leave this area free from the hand for better results.
 4. After the 30 first frames, a *Thresholded and Statistics* window will appear, at this moment the user must press '**s**' to start the detection and, then, positionate the hand in the drawn square.
 5. The window *Thresholded and Statistics* will show the detected gesture, the user is free to move and test new detections.
 
-[**LabelGenerator.py**](https://github.com/jaaoop/ProjectGestus/blob/master/LabelGenerator.py) generate new training gestures.
+[**basicApplication.py**](https://github.com/jaaoop/ProjectGestus/blob/master/basicApplication.py) is a test/template for possible applications.
+1. Execute in the shell `python basicApplication.py` .
+2. When the file is open, the webcam will start and the recording will be shown for the user.
+3. In the open window, a square will be drawn and, during 30 frames, will take the area as background. Taking this to count, leave this area free from the hand for better results.
+4. After the 30 first frames, a *Thresholded and Statistics* window will appear, at this moment the user must press '**s**' to start the detection and, then, positionate the hand in the drawn square.
+5. The window *Thresholded and Statistics* will show the detected gesture, the user is free to move and test new detections.
+
+[**runwNotes.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwNotes.py) Application demo using your basic text editor.
+1. Execute in the shell `python runwNotes.py` .
+2. When the file is open, the webcam will start and the recording will be shown for the user.
+3. In the open window, a square will be drawn and, during 30 frames, will take the area as background. Taking this to count, leave this area free from the hand for better results.
+4. After the 30 first frames, a *Thresholded and Statistics* window will appear, at this moment the user must press '**s**' to start the detection and, then, positionate the hand in the drawn square.
+5. The window *Thresholded and Statistics* will show the detected gesture, the user is free to move and test new detections.
+6. If the text editor window is open, the user might see the designed characters being written according to the detection.
+
+>**Note:** Additional dependencies might be needed for some applications.
+
+[**runwMinecraft.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwMinecraft.py) Application demo controlling movements in Minecraft game.
+1. Execute in the shell `python runwMinecraft.py` .
+2. When the file is open, the webcam will start and the recording will be shown for the user.
+3. In the open window, a square will be drawn and, during 30 frames, will take the area as background. Taking this to count, leave this area free from the hand for better results.
+4. After the 30 first frames, a *Thresholded and Statistics* window will appear, at this moment the user must press '**s**' to start the detection and, then, positionate the hand in the drawn square.
+5. The window *Thresholded and Statistics* will show the detected gesture, the user is free to move and test new detections.
+6. If the Minecraft window is open, the character will move according to the detection.
+
+>**Note:** Additional dependencies might be needed for some applications.
+
+[**runwArduino.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwArduino.py) Application demo for Arduino.
+1. Execute in the shell `python runwArduino.py` .
+2. When the file is open, the webcam will start and the recording will be shown for the user.
+3. In the open window, a square will be drawn and, during 30 frames, will take the area as background. Taking this to count, leave this area free from the hand for better results.
+4. After the 30 first frames, a *Thresholded and Statistics* window will appear, at this moment the user must press '**s**' to start the detection and, then, positionate the hand in the drawn square.
+5. The window *Thresholded and Statistics* will show the detected gesture, the user is free to move and test new detections.
+6. If an Arduino is connected, the user might see commands being given according to the detection.
+
+>**Note:** Additional dependencies might be needed for some applications.
+
+[**LabelGenerator.py**](https://github.com/jaaoop/ProjectGestus/blob/master/LabelGenerator.py) generates new training gestures.
 1. Execute in the shell `python LabelGenerator.py -n <gesture-name>`.
 2. When the file is open, the webcam will start and the recording will be shown for the user.
 3. In the open window a square will be drawn and, during 30 frames, will take the area as background. Taking this to count, leave this area free from the hand for better results.
@@ -74,7 +111,7 @@ Download the repository or clone by executing in the shell `git clone https://gi
 
 >**Note:** One additional parameter from LabelGenerator is `-t <image-number>` where the ammount of training images is defined, the test ones are 10% of this value. By default the parameter is set to `-t 1000`.
 
-[**ModelTrainer.py**](https://github.com/jaaoop/ProjectGestus/blob/master/ModelTrainer.py) train the model to detect new gestures.
+[**ModelTrainer.py**](https://github.com/jaaoop/ProjectGestus/blob/master/ModelTrainer.py) trains the model to detect new gestures.
 1. Certify that you have the same folders in [Train](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Train) and [Test](https://github.com/jaaoop/ProjectGestus/tree/master/Dataset/Test).
 2. Execute in the shell `python ModelTrainer.py`.
 3. Wait until the end of the training.
@@ -87,7 +124,7 @@ This project is part of the RAS Unesp Bauru projects. For more information about
 ## Authors
 
 - [**Artur Starling**](https://github.com/ArturStarling)
-- [**Fabrício Amoroso**](https://github.com/lefabricion)
+- [**Fabrício Amoroso**](https://github.com/FabricioAmoroso)
 - [**Gustavo Stahl**](https://github.com/GustavoStah)
 - [**João Gouvêa**](https://github.com/jaaoop)
 

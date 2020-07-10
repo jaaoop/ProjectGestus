@@ -1,3 +1,2 @@
-# Any temporary image and pycache won't be sent GitHub
-*png
+# Pycache won't be sent GitHub
 __pycache__

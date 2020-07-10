@@ -65,6 +65,43 @@ Faça download do repositório ou clone executando no terminal `git clone https:
 4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
 5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
 
+[**basicApplication.py**](https://github.com/jaaoop/ProjectGestus/blob/master/basicApplication.py) teste/template para possíveis aplicações 
+1. Execute no terminal `python basicApplication.py` .
+2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
+3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
+4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
+5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
+
+[**runwNotes.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwNotes.py) Demo de aplicação usando um editor de texto
+1. Execute no terminal `python runwNotes.py` .
+2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
+3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
+4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
+5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
+6. Se a janela do editor de texto estiver aberta, o usuário verá os caracteres designados sendo escritos de acordo com a detecção.
+
+>**Note:** Outras dependências podem ser necessárias para algumas aplicações.
+
+[**runwMinecraft.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwMinecraft.py) Demo para controlar movimentos no Minecraft
+1. Execute no terminal `python runwMinecraft.py` .
+2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
+3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
+4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
+5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
+6. Se a janela do Minecraft estiver aberta, o personagem se movimentará de acordo com a detecção.
+
+>**Note:** Outras dependências podem ser necessárias para algumas aplicações.
+
+[**runwArduino.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwArduino.py) Demo para Arduino
+1. Execute no terminal `python runwArduino.py` .
+2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
+3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
+4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
+5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
+6. Se um Arduino estiver conectado, o usuário verá os comandos sendo realizados de acordo com a detecção.
+
+>**Note:** Outras dependências podem ser necessárias para algumas aplicações.
+
 [**LabelGenerator.py**](https://github.com/jaaoop/ProjectGestus/blob/master/LabelGenerator.py) gera novos gestos para treino.
 1. Execute no terminal `python LabelGenerator.py -n <nome-do-gesto>`.
 2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
@@ -87,7 +124,7 @@ Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a
 ## Autores
 
 - [**Artur Starling**](https://github.com/ArturStarling)
-- [**Fabrício Amoroso**](https://github.com/lefabricion)
+- [**Fabrício Amoroso**](https://github.com/FabricioAmoroso)
 - [**Gustavo Stahl**](https://github.com/GustavoStah)
 - [**João Gouvêa**](https://github.com/jaaoop)
 
