@@ -1,9 +1,9 @@
 import cv2
-# import keyboard
-import pyautogui
+import keyboard
 from ContinuousGesturePredictor import continuousGesturePredictor
-#requires keyboard in the environment -> pip install keyboard
-#requires PyAutoGUI in the env -> pip install pyautogui
+#Open minecraft and test inputs
+#Requires keyboard in base -> pip install keyboard
+#The codes must be installed and running in base as well because of keyboard library
 camera=cv2.VideoCapture(0)
 predizGesto=continuousGesturePredictor()
 while(True):
@@ -16,23 +16,43 @@ while(True):
 
     #Assign actions for each prediction
     if prediction == "Fist":
-        pyautogui.press('w')
+        keyboard.press('d')
+        keyboard.release('space')
+        keyboard.release('s')
+        keyboard.release('w')
+        keyboard.release('a')
 
     elif prediction == "Joinha":
-        pyautogui.press('a')
+        keyboard.release('s')
+        keyboard.release('a')
+        keyboard.release('d')
+        keyboard.release('w')
+        keyboard.press('space')
 
     elif prediction == "Ok":
-        pyautogui.press('s')
+        keyboard.press('s')
+        keyboard.release('space')
+        keyboard.release('w')
+        keyboard.release('a')
+        keyboard.release('d')
 
     elif prediction == "Palm":
-        pyautogui.press('space')
+        keyboard.press('w')
+        keyboard.release('space')
+        keyboard.release('s')
+        keyboard.release('a')
+        keyboard.release('d')
 
     elif prediction == "Swing":
-        pyautogui.press('d')
+        keyboard.press('a')
+        keyboard.release('space')
+        keyboard.release('w')
+        keyboard.release('s')
+        keyboard.release('d')
 
-    elif prediction == "Null":
-        pyautogui.keyUp('w')
-        pyautogui.keyUp('a')
-        pyautogui.keyUp('s')
-        pyautogui.keyUp('d')
-        pyautogui.keyUp('space')
+    elif predicition == "Null":
+        keyboard.release('w')
+        keyboard.release('a')
+        keyboard.release('s')
+        keyboard.release('d')
+        keyboard.release('space')

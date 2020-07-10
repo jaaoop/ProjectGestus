@@ -1,37 +1,35 @@
 import cv2
+import serial 
 from ContinuousGesturePredictor import continuousGesturePredictor
 
 camera=cv2.VideoCapture(0)
 predizGesto=continuousGesturePredictor()
+
+#Arduino variable 
+arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1)  # Open serial port
+​
 while(True):
     _, frame = camera.read()
     predizGesto.main(frame)
     prediction = predizGesto.className
-
+​
     if predizGesto.keypress == ord("q"): #Press 'q' to exit
+        arduino.close() #Close serial port 
         break
-    
+        
     #Assign actions for each prediction
     if prediction == "Fist":
-        arduino(port, "a")
-
+        arduino.write(bytes('a', encoding='utf-8'))         # writes a string
+​
     elif prediction == "Joinha":
-        arduino(port, "b")
-
+        arduino.write(bytes('b', encoding='utf-8'))         # writes a string
+                                        
     elif prediction == "Ok":
-        arduino(port, "c")
-
+        arduino.write(bytes('c', encoding='utf-8'))         # writes a string
+​
     elif prediction == "Palm":
-        arduino(port, "d")
-
+        arduino.write(bytes('d', encoding='utf-8'))         # writes a string
+​
     elif prediction == "Swing":
-        arduino(port, "e")
-
-
-#Arduino function
-def arduino(channel, char):
-    char -> letra
-    example: channel = '/dev/ttyACM0'
-    arduino = serial.Serial(port=channel, baudrate=9600, timeout=1)
-    arduino.write(bytes(char, encoding='utf-8'))
-    arduino.close()
+        arduino.write(bytes('f', encoding='utf-8'))         # writes a string
+​

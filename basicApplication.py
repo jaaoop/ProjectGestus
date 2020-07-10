@@ -1,6 +1,6 @@
 import cv2
 from ContinuousGesturePredictor import continuousGesturePredictor
-
+#Basic code layout for editing
 camera=cv2.VideoCapture(0)
 predizGesto=continuousGesturePredictor()
 while(True):
@@ -13,16 +13,16 @@ while(True):
 
     #Assign actions for each prediction
     if prediction == "Fist":
-        print("Fist")
+        pass
 
     elif prediction == "Joinha":
-        print("Joinha")
+        pass
 
     elif prediction == "Ok":
-        print("Ok")
+        pass
 
     elif prediction == "Palm":
-        print("Palm")
+        pass
 
     elif prediction == "Swing":
-        print("Swing")
+        pass

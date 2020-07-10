@@ -2,7 +2,8 @@ import cv2
 import pynput
 from pynput.keyboard import Key, Controller
 from ContinuousGesturePredictor import continuousGesturePredictor
-#requires pynput installed -> pip install pynput
+#Open notes and test inputs
+#Requires pynput installed -> pip install pynput
 #Instead of pynput, other libraries can be used according to your preference: keyboard, pyautogui
 keyboard = Controller()
 camera=cv2.VideoCapture(0)
