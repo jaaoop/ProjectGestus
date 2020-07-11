@@ -65,43 +65,6 @@ Faça download do repositório ou clone executando no terminal `git clone https:
 4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
 5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
 
-[**basicApplication.py**](https://github.com/jaaoop/ProjectGestus/blob/master/basicApplication.py) teste/template para possíveis aplicações 
-1. Execute no terminal `python basicApplication.py` .
-2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
-3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
-4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
-5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
-
-[**runwNotes.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwNotes.py) Demo de aplicação usando um editor de texto
-1. Execute no terminal `python runwNotes.py` .
-2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
-3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
-4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
-5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
-6. Se a janela do editor de texto estiver aberta, o usuário verá os caracteres designados sendo escritos de acordo com a detecção.
-
->**Note:** Outras dependências podem ser necessárias para algumas aplicações.
-
-[**runwMinecraft.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwMinecraft.py) Demo para controlar movimentos no Minecraft
-1. Execute no terminal `python runwMinecraft.py` .
-2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
-3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
-4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
-5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
-6. Se a janela do Minecraft estiver aberta, o personagem se movimentará de acordo com a detecção.
-
->**Note:** Outras dependências podem ser necessárias para algumas aplicações.
-
-[**runwArduino.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwArduino.py) Demo para Arduino
-1. Execute no terminal `python runwArduino.py` .
-2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
-3. Na janela aberta um quadrado será desenhado e, durante 30 frames, pegará a área do desenho como *background*. Portanto, deixe essa área livre da mão para melhores resultados.
-4. Após os 30 frames iniciais, a janela *Thresholded and Statistics* irá aparecer, nesse momento o usuário deve apertar a tecla '**s**' para começar a detecção e, então, posicionar a mão no quadrado desenhado.
-5. A janela *Thresholded and Statistics* aparecerá com o nome do gesto detectado, o usuário é livre para fazer movimentos e testar novas detecções.
-6. Se um Arduino estiver conectado, o usuário verá os comandos sendo realizados de acordo com a detecção.
-
->**Note:** Outras dependências podem ser necessárias para algumas aplicações.
-
 [**LabelGenerator.py**](https://github.com/jaaoop/ProjectGestus/blob/master/LabelGenerator.py) gera novos gestos para treino.
 1. Execute no terminal `python LabelGenerator.py -n <nome-do-gesto>`.
 2. Ao abrir o arquivo a webcam iniciará e a filmagem será mostrada ao usuário.
@@ -117,6 +80,32 @@ Faça download do repositório ou clone executando no terminal `git clone https:
 3. Aguarde até o final do treinamento.
 
 >**Nota:** Um parâmetro adicional do ModelTrainer é `-c True` que permite salvar o gráfico de treino. Por padrão o parâmetro é `-c False`.
+
+### Implementações do código
+
+Os seguintes arquivos vão se comportar da mesma maneira que `ContinousGesturePredictor.py`, com a exceção que para cada gesto uma ação é designada, como mover personagem de vídeo game ou pressionar uma tecla do teclado. O arquivo `basicApplication.py` é a estrutura de código das implementações sem as atribuições, o usuário é capaz de configurar as ações de acordo com suas necessidades.
+
+[**basicApplication.py**](https://github.com/jaaoop/ProjectGestus/blob/master/basicApplication.py) template para possíveis aplicações .
+1. Execute no terminal `python basicApplication.py` .
+2. O arquivo vai ser comportar da mesma maneira que `ContinousGesturePredictor.py` se o usuário não atribuir nenhuma ação.
+
+[**runwNotes.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwNotes.py) demo de aplicação usando um editor de texto.
+1. Execute no terminal `python runwNotes.py` .
+2. Se o editor de texto estiver aberto, o usuário deve ver na tela os caracteres designados de acordo com os gestos.
+
+>**Note:** Outras dependências podem ser necessárias para algumas aplicações.
+
+[**runwMinecraft.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwMinecraft.py) demo para controlar movimentos no Minecraft.
+1. Execute no terminal `python runwMinecraft.py` .
+2. Se a janela do minecraft estiver aberta, o personagem deve ser mover de acordo com a detecção.
+
+>**Note:** Outras dependências podem ser necessárias para algumas aplicações.
+
+[**runwArduino.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwArduino.py) demo para Arduino.
+1. Execute no terminal `python runwArduino.py` .
+2. Se um Arduino estiver conectado, o usuário deve ver comandos sendo passados de acordo com a detecção.
+
+>**Note:** Outras dependências podem ser necessárias para algumas aplicações.
 
 ## Informações
 Este projeto é parte dos projetos da RAS Unesp Bauru. Para mais informações a respeito desse e outros projetos, acesse: https://sites.google.com/unesp.br/rasunespbauru/home.
