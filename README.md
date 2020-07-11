@@ -90,19 +90,19 @@ assigned, like moving a video game character or pressing a keyboard key. The fil
 1. Execute in the shell `python basicApplication.py` .
 2. The file will behave in the same way as `ContinousGesturePredictor.py` if the user doesn't make any gesture assignments.
 
-[**runwNotes.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwNotes.py)  application demo for your basic text editor.
+[**runwNotes.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwNotes.py) is application demo for your basic text editor.
 1. Execute in the shell `python runwNotes.py`.
 2. If the text editor window is open, the user might see the designed characters being written according to the detection.
 
 >**Note:** Additional dependencies might be needed for some applications.
 
-[**runwMinecraft.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwMinecraft.py) application demo that controls character movements in Minecraft.
+[**runwMinecraft.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwMinecraft.py) is application demo that controls character movements in Minecraft.
 1. Execute in the shell `python runwMinecraft.py`.
 2. If the Minecraft window is open, the character will move according to the detection.
 
 >**Note:** Additional dependencies might be needed for some applications.
 
-[**runwArduino.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwArduino.py) application demo for Arduino.
+[**runwArduino.py**](https://github.com/jaaoop/ProjectGestus/blob/master/runwArduino.py) is application demo for Arduino.
 1. Execute in the shell `python runwArduino.py` . 
 2. If an Arduino is connected, the user might see commands being given according to the detection.
 
