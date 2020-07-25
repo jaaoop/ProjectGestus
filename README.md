@@ -23,8 +23,8 @@ Recommended version 3.7.
 
 ### Create a conda virtual environment
 
-`conda create -n <nome-do-ambiente> python=3.7`<br/>
-`conda activate <nome-do-ambiente>` 
+`conda create -n <name-of-environment> python=3.7`<br/>
+`conda activate <name-of-environment>` 
 
 ### Necessary dependencies
 
