@@ -29,7 +29,7 @@ Recomenda-se versão 3.7.
 ### Dependências necessárias
 
 **Instalação em uma linha**<br/>
-`pip install tensorflow-gpu==1.15.2 opencv-python numpy Pillow imutils scipy matplotlib`
+`pip install tensorflow-gpu==1.15.2 opencv-python numpy scipy matplotlib`
 
 - ### TensorFlow (recomenda-se versões <= 1.15.2)
 `pip install tensorflow==1.15.2` (CPU)<br/>
@@ -40,12 +40,6 @@ Recomenda-se versão 3.7.
 
 - ### Numpy
 `pip install numpy`
-
-- ### Pillow
-`pip install Pillow`
-
-- ### Imutils
-`pip install imutils`
 
 - ### SciPy
 `pip install scipy`

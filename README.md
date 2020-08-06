@@ -23,13 +23,13 @@ Recommended version 3.7.
 
 ### Create a conda virtual environment
 
-`conda create -n <name-of-environment> python=3.7`<br/>
-`conda activate <name-of-environment>` 
+`conda create -n <environment-name> python=3.7`<br/>
+`conda activate <environment-name>` 
 
 ### Necessary dependencies
 
 **One line installation**<br/>
-`pip install tensorflow-gpu==1.15.2 opencv-python numpy Pillow imutils scipy matplotlib`
+`pip install tensorflow-gpu==1.15.2 opencv-python numpy scipy matplotlib`
 
 - ### TensorFlow (recommended version <= 1.15.2)
 `pip install tensorflow==1.15.2` (CPU)<br/>
@@ -40,12 +40,6 @@ Recommended version 3.7.
 
 - ### Numpy
 `pip install numpy`
-
-- ### Pillow
-`pip install Pillow`
-
-- ### Imutils
-`pip install imutils`
 
 - ### SciPy
 `pip install scipy`

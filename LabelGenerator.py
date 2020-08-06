@@ -1,6 +1,5 @@
 # organize imports
 import cv2
-import imutils
 import numpy as np
 import os
 from os.path import join, split
@@ -97,7 +96,7 @@ def main():
         if (grabbed == True):
 
             # resize the frame
-            frame = imutils.resize(frame, width=700)
+            frame = cv2.resize(frame, (700, int(frame.shape[0] * float(700/frame.shape[1]))), interpolation=cv2.INTER_AREA)
 
             # flip the frame so that it is not the mirror view
             frame = cv2.flip(frame, 1)

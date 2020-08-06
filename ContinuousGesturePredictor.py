@@ -1,8 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from PIL import Image
 import cv2
-import imutils
 import argparse
 import glob
 import os
@@ -29,6 +27,8 @@ class continuousGesturePredictor():
         self.predictionsThreshold = self.arguments['threshold']
         self.className = ""
         self.keypress = ""
+
+        self.bgs = cv2.bgsegm.createBackgroundSubtractorMOG()
 
         # Get a list with the name of the gestures in alphabetical order
         self.gestureNames = []
@@ -61,12 +61,9 @@ class continuousGesturePredictor():
     
 
     def main(self, frame):
-        # keep looping, until interrupted
-        frame = imutils.resize(frame, width = 700)
 
-        # Flip the frame so th
         # resize the frame
-        frame = imutils.resize(frame, width = 700)
+        frame = cv2.resize(frame, (700, int(frame.shape[0] * float(700/frame.shape[1]))), interpolation=cv2.INTER_AREA)
 
         # Flip the frame so that it is not the mirror view
         frame = cv2.flip(frame, 1)
@@ -239,6 +236,7 @@ class continuousGesturePredictor():
         if self.bg is None:
             self.bg = image.copy().astype("float")
             return
+        self.bgs.apply(image.copy(), learningRate=0.5)
 
         # Compute weighted average, accumulate it and update the background
         cv2.accumulateWeighted(image, self.bg, self.aWeight)
@@ -246,13 +244,17 @@ class continuousGesturePredictor():
     def segment(self, image, threshold=25):
         self.bg
         # Find the absolute difference between background and current frame
-        diff = cv2.absdiff(self.bg.astype("uint8"), image)
+        diff = cv2.absdiff(self.bg.astype("uint8"), image.copy())
 
         # Threshold the diff image so that we get the foreground
         thresholded = cv2.threshold(diff,
                                     threshold,
                                     255,
                                     cv2.THRESH_BINARY)[1]
+        
+        bgsimage = self.bgs.apply(image.copy(), learningRate=0)
+        cv2.imshow("teste", bgsimage)
+        cv2.waitKey(1)
 
         # Get the contours in the thresholded image
         (cnts, _) = cv2.findContours(thresholded.copy(),
